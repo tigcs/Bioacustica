@@ -20,7 +20,7 @@ library(seewave)
 
 ### >>> Função para juntar vários arquivos de áudios de um único arquivo <<<
 
-Esta função une/junta/cola vários arquivos de áudios provenientes do Audiomoth (firmware 1.8.1) eu um único arquivo. Faz uso dos pacotes 'tuneR' e 'seewave'.
+Esta função une/junta/cola vários arquivos de áudios provenientes do Audiomoth (firmware 1.8.1) em um único arquivo. Faz uso dos pacotes 'tuneR' e 'seewave'.
 
 ````{r}
 juntar_audios <- function (lista_audios, diretorio) {
@@ -42,5 +42,24 @@ juntar_audios <- function (lista_audios, diretorio) {
   writeWave(a1, filename = paste0(diretorio,dia, a1_hora,"-", a2_hora,"_G.WAV")) # salva o arquivo de áudio resultante, "AAAAMMDD_HoraPrimeiro-HoraÚltimo_G.WAV"
   print("SALVO")
   gc() # Libera a memória RAM utilizada pelo R, já que os arquivos trabalhados podem ser bem grandes.
+}
+````
+### >>> Função para juntar um determinado número de arquivos de áudios de um único arquivo <<<
+
+Esta função une/junta/cola um determinado número de arquivos de áudios provenientes do Audiomoth (firmware 1.8.1) em um único arquivo. Faz uso dos pacotes 'tuneR' e 'seewave', além da função **juntar_audios**.
+
+````{r}
+juntar_audios_grupos <- function(audios, diretorio,n){
+library(tuneR)
+library(seewave)
+for (i in audios) {
+  if (length(audios) > 0){
+    lista_n_audios <- audios [1:n] # cria uma lista com os nomes dos arquivos de áudio na quantidade determinda
+    lista_n_audios <- lista_n_audios[!is.na(lista_n_audios)] # caso não tenha a quantidade suficiente de arquivos, elimina-se o item NA criados. Elimina NA de uma lista.
+    print (paste0("AGRUPANDO: ", lista_n_audios[1], " -----ATÉ------ ", lista_n_audios[length(lista_n_audios)])) # Escreve no console para acompanhamento do laço.
+    juntar_audios(lista_audios = lista_n_audios, diretorio = diretorio ) # junta os arquivos em um único aqruivo.
+    audios <- audios[-c(1:n)]} # Elimina os arquivos que já foram unidos da lista de áudios que está sendo utilizada pelo laço.
+    }
+  print("FIM")
 }
 ````
