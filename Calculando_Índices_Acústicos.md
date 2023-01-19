@@ -1,6 +1,6 @@
 ### Cálculo de Índices Acústicos ###
 
-Este script tem como objetivo calcular índices acústicos de vários arquivos de áudio utilizando o R para rodar o programa **AnalysisPrograms.exe (AP)** em laço (loop). Via R o comando é repassado ao terminal Linux.
+Este script tem como objetivo calcular índices acústicos de vários arquivos de áudio utilizando o R para rodar o programa **AnalysisPrograms.exe (AP)** em laço (loop). Via R o comando é repassado ao terminal Linux. A origem deste script é: https://ap.qut.ecoacoustics.info/guides/using_r.html
 
 ````{r}
 # Diretório de trabalho
