@@ -65,7 +65,8 @@ for (i in audios) {
 ````
 ### >>> Juntar vários arquivos de áudios de um único arquivo COM reamostragem <<<
 
-Esta função une/junta/cola vários arquivos de áudios provenientes do Audiomoth (firmware 1.8.1) em um único arquivo. Faz uso dos pacotes 'tuneR' e 'seewave'.
+Este script reamostra áudios para uma taxa de amostragem de 44 kHz & une/junta/cola vários arquivos de áudios em um único arquivo. 
+
 ````{r}
 #### Aumentando a memória RAM disponível para uso no R, se necessário ####
 library(unix)
