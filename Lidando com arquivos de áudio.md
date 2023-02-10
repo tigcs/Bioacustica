@@ -63,3 +63,52 @@ for (i in audios) {
   print("FIM")
 }
 ````
+### >>> Juntar vários arquivos de áudios de um único arquivo COM reamostragem <<<
+
+Esta função une/junta/cola vários arquivos de áudios provenientes do Audiomoth (firmware 1.8.1) em um único arquivo. Faz uso dos pacotes 'tuneR' e 'seewave'.
+````{r}
+#### Aumentando a memória RAM disponível para uso no R, se necessário ####
+library(unix)
+rlimit_all()
+rlimit_as(1e15)  #aumenta para ~15GB
+
+#### Carregando bibliotecas & configurando WD  ####
+library(seewave)
+library(tuneR)
+setwd("~/CPLE")
+files <- list.files("./audios",pattern = "*.WAV", full.names = TRUE)
+
+#### Juntar Áudios com reamostragem ####
+juntar_audios <- function (lista_audios, diretorio) {
+  library(tuneR)
+  library(seewave)
+  for (a in lista_audios) {
+    if (exists ("a1") == FALSE) { #carrega o primeiro áudio da lista, caso ainda não tenha sido carregado
+      a1 <- readWave(a)
+      a1 <- downsample(a1, samp.rate = 44000) # reamostragrem para frequência inferior
+      a1_hora <- substr(basename(a),10,13) # armazena a hora do primeiro áudio para nomear o arquivo final
+      print (a)
+      gc() # Libera a memória RAM utilizada pelo R, já que os arquivos trabalhados podem ser bem grandes.
+      }
+    else {
+      print(a)
+      a2 <- readWave(a)
+      a2 <- downsample(a2, samp.rate = 44000) # reamostragrem para frequência inferior
+      a2_hora <- substr(basename(a),10,13) # armazena a hora do último áudio para nomear o arquivo final
+      ax <- bind(a1,a2) # une/junta/cola os áudios
+      a1 <- ax
+      dia <- substr(basename(a),1,9) # armazena o dia de gravação dos áudios
+      writeWave(a1, filename = paste0(diretorio,dia, a1_hora,"-", a2_hora,"_G.WAV")) # salva o arquivo de áudio resultante, "AAAAMMDD_HoraPrimeiro-HoraÚltimo_G.WAV"
+      gc() # Libera a memória RAM utilizada pelo R, já que os arquivos trabalhados podem ser bem grandes.
+      }
+  }
+  dia <- substr(basename(a),1,9) # armazena o dia de gravação dos áudios
+  gc() # Libera a memória RAM utilizada pelo R, já que os arquivos trabalhados podem ser bem grandes.
+  #writeWave(a1, filename = paste0(diretorio,dia, a1_hora,"-", a2_hora,"_G.WAV")) # salva o arquivo de áudio resultante, "AAAAMMDD_HoraPrimeiro-HoraÚltimo_G.WAV"
+  print("SALVO")
+  gc() # Libera a memória RAM utilizada pelo R, já que os arquivos trabalhados podem ser bem grandes.
+}
+
+#### Executa a função ####
+juntar_audios(files,"./audios_teste/")
+````
